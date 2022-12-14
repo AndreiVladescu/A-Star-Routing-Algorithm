@@ -12,7 +12,7 @@ class NetworkDevice:
         if type == 'router':
             self.type = 'router'
             self.image = 'imgs/router.jpg'
-            is_routable = True
+            self.is_routable = True
             if name == '':
                 self.name = 'R' + str(self.counter_router)
                 self.counter_router += 1
@@ -26,6 +26,7 @@ class NetworkDevice:
                 self.counter_pc += 1
             else:
                 self.name = name
+
     def can_route(self):
         return self.is_routable
 
