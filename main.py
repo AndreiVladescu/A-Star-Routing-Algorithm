@@ -40,7 +40,7 @@ def main():
     R_C.firewall = r_c_firewall
 
     network = Network(start=PC_A, goal=PC_B, message=message)
-
+    network.hop_limit = 32
     network.add_nodes([PC_A, PC_B, PC_C, PC_D, R_A, R_B, R_C, R_D])
     '''NETWORK_GRAPH = {R_A: [[R_B, COM_1], [R_C, COM_4]],
                              R_B: [[R_D, COM_3], [R_A, COM_1]],
