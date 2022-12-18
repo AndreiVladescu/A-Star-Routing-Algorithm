@@ -44,9 +44,9 @@ class NetworkDevice:
     def __init__(self, type, name=''):
         global counter_router
         global counter_pc
-        if type == 'router':
-            self.type = 'router'
-            self.image = 'imgs/router.jpg'
+        self.type = type
+        if type == 'router' or type == 'wireless-router' or type == 'space-router':
+            #self.image = 'imgs/router.jpg'
             self.is_routable = True
             if name == '':
                 self.name = 'R' + str(counter_router)
@@ -54,8 +54,7 @@ class NetworkDevice:
             else:
                 self.name = name
         else:
-            self.type = 'pc'
-            self.image = 'imgs/pc.jpg'
+            #self.image = 'imgs/pc.jpg'
             if name == '':
                 self.name = 'PC' + str(counter_pc)
                 counter_pc += 1
@@ -122,6 +121,11 @@ class Network:
     icons = {
         "router": "imgs/router.jpg",
         "pc": "imgs/pc.jpg",
+        "phone": "imgs/phone.jpg",
+        "tablet": "imgs/tablet.jpg",
+        "laptop": "imgs/laptop.jpg",
+        "space-router": "imgs/space-router.jpg",
+        "wireless-router": "imgs/wireless-router.jpg",
     }
 
     NETWORK_GRAPH = dict()
@@ -161,7 +165,21 @@ class Network:
             self.parent[node] = None
 
         for node in self.node_list:
-            self.Graph.add_node(node, image=self.images["router"] if node.type == 'router' else self.images['pc'])
+            if node.type == 'router':
+                self.Graph.add_node(node, image=self.images['router'])
+            elif node.type =='pc':
+                self.Graph.add_node(node, image=self.images['pc'])
+            elif node.type =='laptop':
+                self.Graph.add_node(node, image=self.images['laptop'])
+            elif node.type == 'tablet':
+                self.Graph.add_node(node, image=self.images['tablet'])
+            elif node.type == 'wireless-router':
+                self.Graph.add_node(node, image=self.images['wireless-router'])
+            elif node.type == 'space-router':
+                self.Graph.add_node(node, image=self.images['space-router'])
+            elif node.type == 'phone':
+                self.Graph.add_node(node, image=self.images['phone'])
+
         # (PC_A.name, R_A.name, weight=COM_2.weight)
         for path in self.paths:
             self.Graph.add_edge(path[0], path[1], weight=path[2].weight)
@@ -248,15 +266,15 @@ class Network:
                         colors[j] = "red"
             '''
             # colors[1] = "red"
-            pos = nx.spring_layout(self.Graph, seed=1734289230)
+            pos = nx.spring_layout(self.Graph, seed=123455)
             fig, ax = plt.subplots()
             options = {
-                "node_size": 3000,
+                "node_size": 1500,
                 "node_color": "white",
                 "edgecolors": "black",
                 "edge_color": colors,
-                "linewidths": 5,
-                "width": 5,
+                "linewidths": 2,
+                "width": 2,
             }
             nx.draw_networkx_edges(
                 self.Graph,
@@ -271,7 +289,7 @@ class Network:
             tr_figure = ax.transData.transform
             tr_axes = fig.transFigure.inverted().transform
 
-            icon_size = (ax.get_xlim()[1] - ax.get_xlim()[0]) * 0.02
+            icon_size = (ax.get_xlim()[1] - ax.get_xlim()[0]) * 0.012
             icon_center = icon_size / 2.0
 
             for n in self.Graph.nodes:
@@ -282,4 +300,13 @@ class Network:
                 a.axis("off")
             plt.show()
         except:
-            print('Hop limit exceeded')
+            print('Request timed out.')
+    def clear(self):
+        self.message = None
+        self.goal = None
+        self.start = None
+        self.NETWORK_GRAPH = dict()
+        self.VISITED = []
+        self.hop_count = 0
+        self.big_G = {}
+        self.parent = {}
