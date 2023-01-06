@@ -31,14 +31,15 @@ def main():
     protocol = Protocol('FTP')
     message = Message(protocol=protocol, data='USER')
     # If detect data == USER from FTP protocol, then drop it
-    rule = [protocol, 'USER', True]
+    rule_REIN = [protocol, 'REIN', True]
+    rule_USER = [protocol, 'USER', True]
     r_c_firewall = Firewall()
-    r_c_firewall.add_rule(rule)
+    r_c_firewall.add_rule(rule_REIN)
     r_c_firewall.is_active = True
 
-    # R_C.firewall = r_c_firewall
+    R_C.firewall = r_c_firewall
 
-    network = Network(start=PC_E, goal=PC_B, message=message)
+    network = Network(start=PC_A, goal=PC_E, message=message)
     network.hop_limit = 32
     network.add_nodes(
         [PC_A, PC_B, PC_C, PC_D, PC_E, PC_F, Laptop_A, Phone_A, Phone_B, Phone_C, Tablet_A, R_A, R_B, R_C, R_D, R_E,
